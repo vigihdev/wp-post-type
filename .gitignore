@@ -1,0 +1,15 @@
+# Composer
+/vendor/
+composer.lock
+.vscode/
+.amazonq/
+.DS_Store
+.phpunit.result.cache
+/.phpunit.cache/
+Thumbs.db
+/coverage/
+dev.php
+GEMINI.md
+/scripts/
+.env
+/config
