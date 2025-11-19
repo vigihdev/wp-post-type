@@ -37,8 +37,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer config repositories.thrubus composer https://repo.thrubus.id || true
-          composer install --prefer-dist --no-progress --no-suggest || composer install --no-scripts
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            composer config secure-http false
+          fi
+          composer config repositories.thrubus composer http://repo.thrubus.id
+          composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run test suite
         run: composer test
