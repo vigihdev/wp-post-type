@@ -35,23 +35,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-
 
-      - name: Install dependencies
+      - name: Configure Composer (Allow HTTP for private repo)
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            composer config secure-http false
-          fi
+          composer config secure-http false
           composer config repositories.thrubus composer http://repo.thrubus.id
-          composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
 
       - name: Run test suite
         run: composer test
 
       - name: Run test coverage
         run: composer test:coverage
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage/clover.xml
-          flags: unittests
-          name: codecov-umbrella

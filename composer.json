@@ -47,7 +47,8 @@
         }
     },
     "config": {
-        "process-timeout": 0
+        "process-timeout": 0,
+        "secure-http": false
     },
     "scripts": {
         "test": "phpunit",
