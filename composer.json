@@ -50,8 +50,8 @@
         "process-timeout": 0
     },
     "scripts": {
-        "test": "phpunit",
-        "test:coverage": "phpunit --coverage-html coverage",
+        "test": "vendor/bin/phpunit",
+        "test:coverage": "vendor/bin/phpunit --coverage-html coverage",
         "dev": "php -S localhost:1292 dev.php"
     },
     "repositories": [
