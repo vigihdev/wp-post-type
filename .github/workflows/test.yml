@@ -37,6 +37,9 @@ jobs:
       - name: Add private repository
         run: composer config repositories.thrubus composer https://repo.thrubus.id
 
+      - name: Allow insecure HTTP repo
+        run: composer config secure-http false
+
       - name: Configure private repo auth
         run: composer config http-basic.repo.thrubus.id "$THRUBUS_SATIS_USER" "$THRUBUS_SATIS_TOKEN"
         env:
