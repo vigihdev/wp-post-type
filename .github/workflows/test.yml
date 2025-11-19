@@ -35,13 +35,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-
 
-      - name: Configure Composer (Allow HTTP for private repo)
+      - name: Install dependencies (skip private repo)
         run: |
-          composer config secure-http false
-          composer config repositories.thrubus composer http://repo.thrubus.id
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+          # Install tanpa dependencies dari private repo
+          composer install --prefer-dist --no-progress --no-scripts
+          # Run tests yang tidak butuh private dependencies
+          composer test
 
       - name: Run test suite
         run: composer test
