@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Vigihdev\WpPostType\DTOs;
 
 use Vigihdev\WpPostType\Contracts\ArrayAbleDtoInterface;
+use Vigihdev\WpPostType\Contracts\PostTypeLabelsInterface;
 
 /**
  * DTO untuk Post Type Labels
  */
-final class PostTypeLabelsDto implements ArrayAbleDtoInterface
+final class PostTypeLabelsDto implements ArrayAbleDtoInterface, PostTypeLabelsInterface
 {
+
     public function __construct(
         private string $name,
         private string $singularName,

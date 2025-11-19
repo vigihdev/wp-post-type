@@ -5,36 +5,37 @@ declare(strict_types=1);
 namespace Vigihdev\WpPostType\DTOs;
 
 use Vigihdev\WpPostType\Contracts\ArrayAbleDtoInterface;
+use Vigihdev\WpPostType\Contracts\PostTypeArgsInterface;
 
 /**
  * DTO untuk Post Type Arguments
  */
-final class PostTypeArgsDto implements ArrayAbleDtoInterface
+final class PostTypeArgsDto implements ArrayAbleDtoInterface, PostTypeArgsInterface
 {
 
     public function __construct(
-        private readonly array $labels = [],
-        private readonly bool $public = true,
-        private readonly bool $publiclyQueryable = true,
-        private readonly bool $showUi = true,
-        private readonly bool $showInMenu = true,
-        private readonly bool $queryVar = true,
-        private readonly array|string $rewrite = ['slug' => 'post'],
-        private readonly string $capabilityType = 'post',
-        private readonly bool $hasArchive = true,
-        private readonly bool $hierarchical = false,
-        private readonly ?int $menuPosition = null,
-        private readonly array $supports = ['title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments'],
-        private readonly string $menuIcon = 'dashicons-admin-post',
-        private readonly bool $showInRest = true,
-        private readonly string $restBase = '',
-        private readonly bool $excludeFromSearch = false,
-        private readonly bool $showInNavMenus = true,
-        private readonly bool $showInAdminBar = true,
-        private readonly ?string $description = null,
-        private readonly array $taxonomies = [],
-        private readonly bool $canExport = true,
-        private readonly bool $deleteWithUser = false
+        private array $labels = [],
+        private bool $public = true,
+        private bool $publiclyQueryable = true,
+        private bool $showUi = true,
+        private bool $showInMenu = true,
+        private bool $queryVar = true,
+        private array|string $rewrite = ['slug' => 'post'],
+        private string $capabilityType = 'post',
+        private bool $hasArchive = true,
+        private bool $hierarchical = false,
+        private ?int $menuPosition = null,
+        private array $supports = ['title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments'],
+        private string $menuIcon = 'dashicons-admin-post',
+        private bool $showInRest = true,
+        private string $restBase = '',
+        private bool $excludeFromSearch = false,
+        private bool $showInNavMenus = true,
+        private bool $showInAdminBar = true,
+        private ?string $description = null,
+        private array $taxonomies = [],
+        private bool $canExport = true,
+        private bool $deleteWithUser = false
     ) {}
 
     /**
@@ -124,9 +125,8 @@ final class PostTypeArgsDto implements ArrayAbleDtoInterface
      */
     public function withLabels(array $labels): self
     {
-        $clone = clone $this;
-        $clone->labels = $labels;
-        return $clone;
+        $this->labels = $labels;
+        return $this;
     }
 
     /**
@@ -134,9 +134,8 @@ final class PostTypeArgsDto implements ArrayAbleDtoInterface
      */
     public function withSlug(string $slug): self
     {
-        $clone = clone $this;
-        $clone->rewrite = ['slug' => $slug];
-        return $clone;
+        $this->rewrite = ['slug' => $slug];
+        return $this;
     }
 
     /**
@@ -144,9 +143,8 @@ final class PostTypeArgsDto implements ArrayAbleDtoInterface
      */
     public function withSupports(array $supports): self
     {
-        $clone = clone $this;
-        $clone->supports = $supports;
-        return $clone;
+        $this->supports = $supports;
+        return $this;
     }
 
     /**
@@ -154,9 +152,8 @@ final class PostTypeArgsDto implements ArrayAbleDtoInterface
      */
     public function withMenuIcon(string $icon): self
     {
-        $clone = clone $this;
-        $clone->menuIcon = $icon;
-        return $clone;
+        $this->menuIcon = $icon;
+        return $this;
     }
 
     /**
@@ -164,8 +161,7 @@ final class PostTypeArgsDto implements ArrayAbleDtoInterface
      */
     public function withMenuPosition(int $position): self
     {
-        $clone = clone $this;
-        $clone->menuPosition = $position;
-        return $clone;
+        $this->menuPosition = $position;
+        return $this;
     }
 }

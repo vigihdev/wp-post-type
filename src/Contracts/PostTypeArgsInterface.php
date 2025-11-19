@@ -10,23 +10,27 @@ namespace Vigihdev\WpPostType\Contracts;
 interface PostTypeArgsInterface
 {
     /**
-     * Get labels array
+     * Set labels
      */
-    public function getPostType(): string;
-
-    public function getLabels(): array;
-
-    public function getTaxonomies(): array;
-
-    public function getSupports(): array;
+    public function withLabels(array $labels): self;
 
     /**
-     * Get public flag
+     * Set rewrite slug
      */
-    public function isPublic(): bool;
+    public function withSlug(string $slug): self;
 
     /**
-     * Get rewrite rules
+     * Set supports
      */
-    public function getRewrite(): array|string;
+    public function withSupports(array $supports): self;
+
+    /**
+     * Set menu icon
+     */
+    public function withMenuIcon(string $icon): self;
+
+    /**
+     * Set menu position
+     */
+    public function withMenuPosition(int $position): self;
 }

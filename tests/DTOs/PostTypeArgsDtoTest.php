@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Vigihdev\WpPostType\Tests\DTOs;
 
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,7 @@ use Vigihdev\WpPostType\DTOs\PostTypeArgsDto;
 
 class PostTypeArgsDtoTest extends TestCase
 {
+
     protected function setUp(): void
     {
         WpKernel::boot(
@@ -79,5 +81,46 @@ class PostTypeArgsDtoTest extends TestCase
     {
         $args = PostTypeArgsDto::fromArray([]);
         $this->assertTrue($args->toArray()['public']);
+    }
+
+    #[Test]
+    public function with_labels_sets_labels()
+    {
+        $args = PostTypeArgsDto::fromArray([]);
+        $newLabels = ['name' => 'Custom Posts'];
+        $newArgs = $args->withLabels($newLabels);
+        $labels = $args->toArray()['labels'];
+
+        Assert::assertArrayHasKey('labels', $args->toArray());
+        $this->assertSame($newLabels, $labels);
+    }
+
+    #[Test]
+    public function with_slug_sets_rewrite_slug(): void
+    {
+        $args = PostTypeArgsDto::fromArray([]);
+        $args->withSlug('custom-slug');
+
+        $this->assertSame(['slug' => 'custom-slug'], $args->toArray()['rewrite']);
+    }
+
+    #[Test]
+    public function with_slug_overrides_existing_rewrite(): void
+    {
+        $args = PostTypeArgsDto::fromArray([
+            'rewrite' => ['slug' => 'old-slug', 'with_front' => false]
+        ]);
+        $args->withSlug('new-slug');
+
+        $this->assertSame(['slug' => 'new-slug'], $args->toArray()['rewrite']);
+    }
+
+    #[Test]
+    public function with_slug_returns_self_for_method_chaining(): void
+    {
+        $args = PostTypeArgsDto::fromArray([]);
+        $result = $args->withSlug('test-slug');
+
+        $this->assertSame($args, $result);
     }
 }
