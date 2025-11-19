@@ -6,6 +6,7 @@ namespace Vigihdev\WpPostType\Tests\DTOs;
 
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Filesystem\Path;
+use VigihDev\SymfonyBridge\Config\ConfigBridge;
 use Vigihdev\WpKernel\WpKernel;
 use Vigihdev\WpPostType\DTOs\PostTypeLabelsDto;
 use Vigihdev\WpPostType\Tests\TestCase;
@@ -14,7 +15,7 @@ final class PostTypeLabelsDtoTest extends TestCase
 {
     protected function setUp(): void
     {
-        WpKernel::boot(
+        ConfigBridge::boot(
             basePath: Path::join(__DIR__, '..', '..'),
             configDir: 'config',
             enableAutoInjection: true,

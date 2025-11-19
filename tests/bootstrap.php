@@ -18,3 +18,17 @@ foreach ($testFilesWp as $file) {
         require $file;
     }
 }
+
+if (!function_exists('_x')) {
+    function _x($text, $context = '', $domain = '')
+    {
+        return $text;
+    }
+}
+
+if (!function_exists('__')) {
+    function __($text, $domain = '')
+    {
+        return $text;
+    }
+}
