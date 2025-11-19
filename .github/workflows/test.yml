@@ -39,13 +39,6 @@ jobs:
         run: |
           composer config repositories.thrubus composer http://repo.thrubus.id
 
-      - name: Install dependencies (skip private repo)
-        run: |
-          # Install tanpa dependencies dari private repo
-          composer install --prefer-dist --no-progress --no-scripts
-          # Run tests yang tidak butuh private dependencies
-          composer test
-
       - name: Run test suite
         run: composer test
 
