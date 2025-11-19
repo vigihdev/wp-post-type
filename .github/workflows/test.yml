@@ -36,7 +36,9 @@ jobs:
             ${{ runner.os }}-php-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: |
+          composer config repositories.thrubus composer https://repo.thrubus.id || true
+          composer install --prefer-dist --no-progress --no-suggest || composer install --no-scripts
 
       - name: Run test suite
         run: composer test
