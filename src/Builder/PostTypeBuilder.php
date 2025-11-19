@@ -83,12 +83,21 @@ final class PostTypeBuilder implements PostTypeBuilderInterface
         return $this;
     }
 
+    /**
+     *
+     * @param bool $hasArchive
+     * @return PostTypeBuilder
+     */
     public function hasArchive(bool $hasArchive = true): self
     {
         $this->config['has_archive'] = $hasArchive;
         return $this;
     }
 
+    /**
+     *
+     * @return PostTypeArgsDto
+     */
     public function build(): PostTypeArgsDto
     {
         return PostTypeArgsDto::fromArray($this->config);
