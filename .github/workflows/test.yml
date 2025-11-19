@@ -37,6 +37,12 @@ jobs:
       - name: Add private repository
         run: composer config repositories.thrubus composer https://repo.thrubus.id
 
+      - name: Auth Private Repo
+        run: composer config http-basic.repo.thrubus.id "$THRUBUS_USER" "$THRUBUS_TOKEN"
+        env:
+          THRUBUS_USER: ${{ secrets.THRUBUS_USER }}
+          THRUBUS_TOKEN: ${{ secrets.THRUBUS_TOKEN }}
+
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
