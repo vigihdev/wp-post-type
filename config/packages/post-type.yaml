@@ -1,0 +1,40 @@
+# post-type.yaml
+services:
+  # Multiple Post Type Builders
+  post_type.builder.kota:
+    class: 'Vigihdev\WpPostType\Builder\PostTypeBuilder'
+    arguments:
+      $postType: "kota"
+    calls:
+      - [withSupports, [["title", "editor", "thumbnail"]]]
+      - [withDescription, ["Daftar kota"]]
+      - [withAutoLabels, ["Kota", "Kota"]]
+
+  post_type.builder.provinsi:
+    class: 'Vigihdev\WpPostType\Builder\PostTypeBuilder'
+    arguments:
+      $postType: "provinsi"
+    calls:
+      - [withSupports, [["title", "editor"]]]
+      - [withDescription, ["Daftar provinsi"]]
+      - [withAutoLabels, ["Provinsi", "Provinsi"]]
+
+  post_type.builder.buku:
+    class: 'Vigihdev\WpPostType\Builder\PostTypeBuilder'
+    arguments:
+      $postType: "buku"
+    calls:
+      - [withSupports, [["title", "editor", "thumbnail", "excerpt"]]]
+      - [withDescription, ["Katalog buku"]]
+      - [withAutoLabels, ["Buku", "Buku"]]
+      - [withMenuIcon, ["dashicons-book"]]
+
+  # Manager Service
+  Vigihdev\WpPostType\Contracts\PostTypeManagerServiceInterface:
+    class: 'Vigihdev\WpPostType\Service\PostTypeManagerService'
+    public: true
+    arguments:
+      $postTypes:
+        kota: "@post_type.builder.kota"
+        provinsi: "@post_type.builder.provinsi"
+        buku: "@post_type.builder.buku"

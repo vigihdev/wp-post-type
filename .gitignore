@@ -12,5 +12,5 @@ dev.php
 GEMINI.md
 /scripts/
 .env
-/config
+# /config
 /docs
