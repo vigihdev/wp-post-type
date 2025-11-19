@@ -37,7 +37,6 @@ jobs:
 
       - name: Configure Composer (Allow HTTP for private repo)
         run: |
-          composer config secure-http false
           composer config repositories.thrubus composer http://repo.thrubus.id
 
       - name: Install dependencies
