@@ -11,6 +11,5 @@ Thumbs.db
 dev.php
 GEMINI.md
 /scripts/
-.env
-# /config
 /docs
+tests
