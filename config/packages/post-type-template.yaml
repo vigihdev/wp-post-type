@@ -32,3 +32,8 @@ services:
       ['Vigihdev\WpPostType\DTOs\Rewrite\CategoryRewriteRuleDto', "create"]
     arguments:
       $postType: ~
+
+  permalink.prototype:
+    abstract: true
+    shared: false
+    class: 'Vigihdev\WpPostType\Service\CustomPermalikService'

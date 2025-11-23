@@ -1,0 +1,14 @@
+# query-vars.yaml
+services:
+  Vigihdev\WpPostType\Contracts\Service\QueryVarsInterface:
+    public: true
+    class: Vigihdev\WpPostType\Service\QueryVarsService
+    arguments:
+      $queryVars:
+        - custom_rewrite
+        - category_slug
+        - post_slug # defult
+        - kota
+        - desa
+        - kota_category
+        - desa_category

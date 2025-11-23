@@ -1,6 +1,7 @@
 # services.yaml
 imports:
   - { resource: "packages/post-type-template.yaml" }
+  - { resource: "packages/query-vars.yaml" }
   - { resource: "packages/kota-post-type.yaml" }
   - { resource: "packages/desa-post-type.yaml" }
   # - { resource: "packages/post-type.yaml" }
@@ -28,3 +29,11 @@ services:
     class: Vigihdev\WpPostType\Service\RewriteManagerService
     arguments:
       $rewriteRules: !tagged_iterator rewrite_rule
+
+  Vigihdev\WpPostType\Contracts\Service\CustomPermalikInterface:
+    public: true
+    class: Vigihdev\WpPostType\Service\CustomPermalikService
+    arguments:
+      $postTypesTaxonomys:
+        "kota": "kota_category"
+        "desa": "desa_category"
