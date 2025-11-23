@@ -37,3 +37,10 @@ services:
       $postTypesTaxonomys:
         "kota": "kota_category"
         "desa": "desa_category"
+
+  Vigihdev\WpPostType\Contracts\Service\CustomRewriteInterface:
+    public: true
+    class: Vigihdev\WpPostType\Service\CustomRewriteService
+    arguments:
+      $postTypes: ["kota", "desa"]
+      $queryVars: ["kota", "desa", "kota_category", "desa_category"]
