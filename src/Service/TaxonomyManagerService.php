@@ -13,20 +13,20 @@ use Vigihdev\WpPostType\Contracts\TaxonomyInterface;
 final class TaxonomyManagerService implements TaxonomyManagerInterface
 {
     /** @var TaxonomyInterface[] */
-    private array $items = [];
+    private array $taxonomies = [];
 
     public function __construct(iterable $taxonomies)
     {
         foreach ($taxonomies as $tx) {
             if ($tx instanceof TaxonomyInterface) {
-                $this->items[] = $tx;
+                $this->taxonomies[] = $tx;
             }
         }
     }
 
     public function register(): void
     {
-        foreach ($this->items as $tx) {
+        foreach ($this->taxonomies as $tx) {
             register_taxonomy(
                 $tx->getTaxonomyName(),
                 $tx->getPostType(),
