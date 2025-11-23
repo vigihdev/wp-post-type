@@ -23,6 +23,10 @@ final class CustomRewriteService implements CustomRewriteInterface
         $this->registerQueryVars();
         $this->addRewriteRule();
         $this->registerRequestParser();
+
+        register_activation_hook(__FILE__, function () {
+            flush_rewrite_rules();
+        });
     }
 
     private function registerRequestParser(): void
