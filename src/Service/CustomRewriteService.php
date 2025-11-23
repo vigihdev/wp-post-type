@@ -6,6 +6,7 @@ namespace Vigihdev\WpPostType\Service;
 
 use Vigihdev\WpPostType\Contracts\Service\CustomRewriteInterface;
 use WP;
+use WP_Post;
 
 final class CustomRewriteService implements CustomRewriteInterface
 {
@@ -85,15 +86,24 @@ final class CustomRewriteService implements CustomRewriteInterface
     private function registerAutoFlush(): void
     {
 
-        $flushCallback = function () {
-            flush_rewrite_rules();
-        };
+        add_action('wp_insert_post', function ($post_ID, $post, $update) {
+            if (!$update && $post instanceof WP_Post && in_array($post->post_type, $this->postTypes)) {
+                flush_rewrite_rules();
+            }
+        }, 10, 3);
 
-        foreach ($this->taxonomyNames as $event) {
-            add_action("created_{$event}", $flushCallback);
-            add_action("edited_{$event}", $flushCallback);
-            add_action("delete_{$event}", $flushCallback);
-        }
+        add_action('post_updated', function ($post_ID, $post_after, $post_before) {
+            if ($post_after instanceof WP_Post && in_array($post_after->post_type, $this->postTypes)) {
+                flush_rewrite_rules();
+            }
+        }, 10, 3);
+
+        add_action('delete_post', function ($post_ID) {
+            $post = get_post($post_ID);
+            if ($post instanceof WP_Post && in_array($post->post_type, $this->postTypes)) {
+                flush_rewrite_rules();
+            }
+        });
     }
 
     private function isPublishedPost(object $post): bool
