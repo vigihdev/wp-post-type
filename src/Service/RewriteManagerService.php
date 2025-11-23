@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Vigihdev\WpPostType\Service;
 
-use Vigihdev\WpPostType\Contracts\RewriteManagerServiceInterface;
+use Vigihdev\WpPostType\Contracts\Service\RewriteManagerInterface;
 use Vigihdev\WpPostType\DTOs\RewriteRuleDto;
 
 /**
  * Service untuk handle Rewrite Rules
  */
-final class RewriteManagerService
+final class RewriteManagerService implements RewriteManagerInterface
 {
+
     /** @var RewriteRuleDto[] */
     private array $rules = [];
 

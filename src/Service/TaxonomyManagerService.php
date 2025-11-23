@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Vigihdev\WpPostType\Service;
 
+use Vigihdev\WpPostType\Contracts\Service\TaxonomyManagerInterface;
 use Vigihdev\WpPostType\Contracts\TaxonomyInterface;
 
 /**
  * Service untuk handle Taxonomy Registration
  */
-final class TaxonomyManagerService
+final class TaxonomyManagerService implements TaxonomyManagerInterface
 {
     /** @var TaxonomyInterface[] */
     private array $items = [];
