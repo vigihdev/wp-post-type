@@ -15,18 +15,17 @@ final class CustomRewriteService implements CustomRewriteInterface
 
     public function __construct(
         private readonly array $postTypes,
-        private readonly array $queryVars
+        private readonly array $queryVars,
+        private readonly array $taxonomyNames,
     ) {}
 
     public function register(): void
     {
+
         $this->registerQueryVars();
         $this->addRewriteRule();
         $this->registerRequestParser();
-
-        register_activation_hook(__FILE__, function () {
-            flush_rewrite_rules();
-        });
+        $this->registerAutoFlush();
     }
 
     private function registerRequestParser(): void
@@ -43,7 +42,7 @@ final class CustomRewriteService implements CustomRewriteInterface
                 return;
             }
 
-            $this->resolvePostType($wp, $post_slug);
+            $this->resolvePostType($wp, $post_slug, $category_slug);
         });
     }
 
@@ -56,20 +55,44 @@ final class CustomRewriteService implements CustomRewriteInterface
         );
     }
 
-    private function resolvePostType(WP $wp, string $post_slug): void
+    private function resolvePostType(WP $wp, string $post_slug, string $category_slug): void
     {
         foreach ($this->postTypes as $postType) {
-            if (!is_string($postType)) {
-                continue;
-            }
+            $args = [
+                'name'           => $post_slug,
+                'post_type'      => $postType,
+                'post_status'    => 'publish',
+                'posts_per_page' => 1,
+                'tax_query'      => [
+                    [
+                        'taxonomy' => $this->queryVars[0],
+                        'field'    => 'slug',
+                        'terms'    => $category_slug,
+                    ],
+                ],
+            ];
 
-            $post = get_page_by_path($post_slug, OBJECT, $postType);
+            $query = new \WP_Query($args);
 
-            if ($post && $this->isPublishedPost($post)) {
+            if ($query->have_posts()) {
                 $this->setPostQueryVars($wp, $postType, $post_slug);
                 $this->cleanupCustomVars($wp);
                 return;
             }
+        }
+    }
+
+    private function registerAutoFlush(): void
+    {
+
+        $flushCallback = function () {
+            flush_rewrite_rules();
+        };
+
+        foreach ($this->taxonomyNames as $event) {
+            add_action("created_{$event}", $flushCallback);
+            add_action("edited_{$event}", $flushCallback);
+            add_action("delete_{$event}", $flushCallback);
         }
     }
 
@@ -98,9 +121,26 @@ final class CustomRewriteService implements CustomRewriteInterface
 
     private function addRewriteRule(): void
     {
+
         add_action('init', function (): void {
+
+            $taxonomys = [];
+            $terms = get_terms(array(
+                'taxonomy' => $this->taxonomyNames,
+                'fields'     => 'slugs',
+                'number'     => 500,
+                'orderby'    => 'count',
+                'order'      => 'DESC',
+                'hide_empty' => false,
+            ));
+
+            if ($terms && !is_wp_error($terms) && !empty($terms)) {
+                array_push($taxonomys, ...$terms);
+            }
+
+            $termRegex = implode('|', $taxonomys);
             add_rewrite_rule(
-                '^([^/]+)/([^/]+)/?$',
+                sprintf('^(%s)/([^/]+)/?$', $termRegex),
                 sprintf(
                     'index.php?%s=1&%s=$matches[1]&%s=$matches[2]',
                     self::CUSTOM_REWRITE,

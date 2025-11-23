@@ -4,7 +4,6 @@ imports:
   - { resource: "packages/query-vars.yaml" }
   - { resource: "packages/kota-post-type.yaml" }
   - { resource: "packages/desa-post-type.yaml" }
-  # - { resource: "packages/post-type.yaml" }
 
 services:
   _defaults:
@@ -44,3 +43,4 @@ services:
     arguments:
       $postTypes: ["kota", "desa"]
       $queryVars: ["kota", "desa", "kota_category", "desa_category"]
+      $taxonomyNames: ["kota_category", "desa_category"]
