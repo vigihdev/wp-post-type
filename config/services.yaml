@@ -1,3 +1,30 @@
 # services.yaml
 imports:
-  - { resource: "packages/post-type.yaml" }
+  - { resource: "packages/post-type-template.yaml" }
+  - { resource: "packages/kota-post-type.yaml" }
+  - { resource: "packages/desa-post-type.yaml" }
+  # - { resource: "packages/post-type.yaml" }
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: false
+    public: false
+
+  Vigihdev\WpPostType\Contracts\Service\PostTypeManagerInterface:
+    class: Vigihdev\WpPostType\Service\PostTypeManagerService
+    public: true
+    arguments:
+      $postTypes: !tagged_iterator post_type
+
+  Vigihdev\WpPostType\Contracts\Service\TaxonomyManagerInterface:
+    public: true
+    class: Vigihdev\WpPostType\Service\TaxonomyManagerService
+    arguments:
+      $taxonomies: !tagged_iterator taxonomy
+
+  Vigihdev\WpPostType\Contracts\Service\RewriteManagerInterface:
+    public: true
+    class: Vigihdev\WpPostType\Service\RewriteManagerService
+    arguments:
+      $rewriteRules: !tagged_iterator rewrite_rule

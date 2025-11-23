@@ -24,5 +24,7 @@ interface PostTypeBuilderInterface
     public function showInRest(bool $show = true): self;
     public function hasArchive(bool $hasArchive = true): self;
 
+    public function getPostType(): string;
+
     public function build(): PostTypeArgsDto;
 }

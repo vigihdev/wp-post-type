@@ -1,0 +1,45 @@
+# desa-post-type.yaml
+services:
+  desa.post_type.builder:
+    parent: post_type.builder.prototype
+    tags: ["post_type"]
+    arguments:
+      $postType: "desa"
+    calls:
+      - [withSupports, [["title", "editor", "thumbnail"]]]
+      - [withDescription, ["Daftar desa"]]
+      - [withAutoLabels, ["desa", "desa"]]
+
+  desa.taxonomy.dto:
+    parent: taxonomy.dto.prototype
+    tags: ["taxonomy"]
+    arguments:
+      $taxonomyName: "desa_category"
+      $postType: "desa"
+      $label: "Kategori desa"
+      $rewrite:
+        slug: "desa-category"
+
+  desa.rewrite.tag:
+    parent: rewrite.tag.prototype
+    tags: ["rewrite_rule"]
+    arguments:
+      $tag: "desa"
+
+  desa.rewrite.tag.category:
+    parent: rewrite.tag.prototype
+    tags: ["rewrite_rule"]
+    arguments:
+      $tag: "desa_category"
+
+  desa.rewrite.single:
+    parent: rewrite.single.prototype
+    tags: ["rewrite_rule"]
+    arguments:
+      $postType: "@desa.post_type.builder"
+
+  desa.rewrite.category:
+    parent: rewrite.category.prototype
+    tags: ["rewrite_rule"]
+    arguments:
+      $postType: "@desa.post_type.builder"

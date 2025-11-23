@@ -1,8 +1,82 @@
 # post-type.yaml
 services:
-  # Multiple Post Type Builders
-  post_type.builder.kota:
+  _defaults:
+    autowire: true
+    autoconfigure: false
+    public: false
+
+  post_type.builder.prototype:
     class: 'Vigihdev\WpPostType\Builder\PostTypeBuilder'
+
+  taxonomy.dto.prototype:
+    abstract: true
+    shared: false
+    class: 'Vigihdev\WpPostType\DTOs\TaxonomyDto'
+
+  rewrite.tag.prototype:
+    abstract: true
+    shared: false
+    class: 'Vigihdev\WpPostType\DTOs\RewriteTagDto'
+    arguments:
+      $tag: ~
+      $regex: "([^/]+)"
+
+  rewrite.single.prototype:
+    abstract: true
+    shared: false
+    class: 'Vigihdev\WpPostType\DTOs\Rewrite\SingleRewriteRuleDto'
+    factory: ['Vigihdev\WpPostType\DTOs\Rewrite\SingleRewriteRuleDto', "create"]
+    arguments:
+      $postType: ~
+
+  rewrite.category.prototype:
+    abstract: true
+    shared: false
+    class: 'Vigihdev\WpPostType\DTOs\Rewrite\CategoryRewriteRuleDto'
+    factory:
+      ['Vigihdev\WpPostType\DTOs\Rewrite\CategoryRewriteRuleDto', "create"]
+    arguments:
+      $postType: ~
+
+  desa.post_type.builder:
+    public: true
+    parent: post_type.builder.prototype
+    tags: ["post_type"]
+    arguments:
+      $postType: "desa"
+    calls:
+      - [withSupports, [["title", "editor", "thumbnail"]]]
+      - [withDescription, ["Daftar kota"]]
+      - [withAutoLabels, ["Kota", "Kota"]]
+
+  desa.rewrite.tag:
+    public: true
+    parent: rewrite.tag.prototype
+    arguments:
+      $tag: "desa"
+
+  desa.rewrite.tag.category:
+    public: true
+    parent: rewrite.tag.prototype
+    arguments:
+      $tag: "desa_category"
+
+  desa.rewrite.single:
+    public: true
+    parent: rewrite.single.prototype
+    arguments:
+      $postType: "@desa.post_type.builder"
+
+  desa.rewrite.category:
+    public: true
+    parent: rewrite.category.prototype
+    arguments:
+      $postType: "@desa.post_type.builder"
+
+  #######
+  kota.post_type.builder:
+    parent: post_type.builder.prototype
+    tags: ["post_type"]
     arguments:
       $postType: "kota"
     calls:
@@ -10,31 +84,19 @@ services:
       - [withDescription, ["Daftar kota"]]
       - [withAutoLabels, ["Kota", "Kota"]]
 
-  post_type.builder.provinsi:
-    class: 'Vigihdev\WpPostType\Builder\PostTypeBuilder'
+  kota.taxonomy.dto:
+    public: true
+    parent: taxonomy.dto.prototype
+    tags: ["taxonomy"]
     arguments:
-      $postType: "provinsi"
-    calls:
-      - [withSupports, [["title", "editor"]]]
-      - [withDescription, ["Daftar provinsi"]]
-      - [withAutoLabels, ["Provinsi", "Provinsi"]]
+      $taxonomyName: "kota_category"
+      $postType: "kota"
+      $label: "Kategori Kota"
+      $rewrite:
+        slug: "kota-category"
 
-  post_type.builder.buku:
-    class: 'Vigihdev\WpPostType\Builder\PostTypeBuilder'
-    arguments:
-      $postType: "buku"
-    calls:
-      - [withSupports, [["title", "editor", "thumbnail", "excerpt"]]]
-      - [withDescription, ["Katalog buku"]]
-      - [withAutoLabels, ["Buku", "Buku"]]
-      - [withMenuIcon, ["dashicons-book"]]
-
-  # Manager Service
   Vigihdev\WpPostType\Contracts\PostTypeManagerServiceInterface:
     class: 'Vigihdev\WpPostType\Service\PostTypeManagerService'
     public: true
     arguments:
-      $postTypes:
-        kota: "@post_type.builder.kota"
-        provinsi: "@post_type.builder.provinsi"
-        buku: "@post_type.builder.buku"
+      $postTypes: !tagged_iterator post_type

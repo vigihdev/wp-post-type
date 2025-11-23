@@ -1,0 +1,45 @@
+# kota-post-type.yaml
+services:
+  kota.post_type.builder:
+    parent: post_type.builder.prototype
+    tags: ["post_type"]
+    arguments:
+      $postType: "kota"
+    calls:
+      - [withSupports, [["title", "editor", "thumbnail"]]]
+      - [withDescription, ["Daftar kota"]]
+      - [withAutoLabels, ["Kota", "Kota"]]
+
+  kota.taxonomy.dto:
+    parent: taxonomy.dto.prototype
+    tags: ["taxonomy"]
+    arguments:
+      $taxonomyName: "kota_category"
+      $postType: "kota"
+      $label: "Kategori Kota"
+      $rewrite:
+        slug: "kota-category"
+
+  kota.rewrite.tag:
+    parent: rewrite.tag.prototype
+    tags: ["rewrite_rule"]
+    arguments:
+      $tag: "kota"
+
+  kota.rewrite.tag.category:
+    parent: rewrite.tag.prototype
+    tags: ["rewrite_rule"]
+    arguments:
+      $tag: "kota_category"
+
+  kota.rewrite.single:
+    parent: rewrite.single.prototype
+    tags: ["rewrite_rule"]
+    arguments:
+      $postType: "@kota.post_type.builder"
+
+  kota.rewrite.category:
+    parent: rewrite.category.prototype
+    tags: ["rewrite_rule"]
+    arguments:
+      $postType: "@kota.post_type.builder"

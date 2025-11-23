@@ -17,6 +17,11 @@ final class PostTypeBuilder implements PostTypeBuilderInterface
         $this->config['rewrite'] = ['slug' => $postType];
     }
 
+    public function getPostType(): string
+    {
+        return $this->postType;
+    }
+
     public function withLabels(array $labels): self
     {
         $this->config['labels'] = $labels;

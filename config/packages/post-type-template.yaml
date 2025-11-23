@@ -1,0 +1,34 @@
+# post-type-template.yaml
+services:
+  post_type.builder.prototype:
+    class: 'Vigihdev\WpPostType\Builder\PostTypeBuilder'
+
+  taxonomy.dto.prototype:
+    abstract: true
+    shared: false
+    class: 'Vigihdev\WpPostType\DTOs\TaxonomyDto'
+
+  rewrite.tag.prototype:
+    abstract: true
+    shared: false
+    class: 'Vigihdev\WpPostType\DTOs\RewriteTagDto'
+    arguments:
+      $tag: ~
+      $regex: "([^/]+)"
+
+  rewrite.single.prototype:
+    abstract: true
+    shared: false
+    class: 'Vigihdev\WpPostType\DTOs\Rewrite\SingleRewriteRuleDto'
+    factory: ['Vigihdev\WpPostType\DTOs\Rewrite\SingleRewriteRuleDto', "create"]
+    arguments:
+      $postType: ~
+
+  rewrite.category.prototype:
+    abstract: true
+    shared: false
+    class: 'Vigihdev\WpPostType\DTOs\Rewrite\CategoryRewriteRuleDto'
+    factory:
+      ['Vigihdev\WpPostType\DTOs\Rewrite\CategoryRewriteRuleDto', "create"]
+    arguments:
+      $postType: ~

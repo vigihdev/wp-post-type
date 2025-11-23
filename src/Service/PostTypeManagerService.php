@@ -4,55 +4,42 @@ declare(strict_types=1);
 
 namespace Vigihdev\WpPostType\Service;
 
-use InvalidArgumentException;
+use Vigihdev\WpPostType\Contracts\ArrayAbleInterface;
 use Vigihdev\WpPostType\Contracts\PostTypeBuilderInterface;
-use Vigihdev\WpPostType\Contracts\PostTypeManagerServiceInterface;
+use Vigihdev\WpPostType\Contracts\Service\PostTypeManagerInterface;
 
-/**
- * Service untuk handle Post Type Registration
- */
-final class PostTypeManagerService implements PostTypeManagerServiceInterface
+final class PostTypeManagerService implements PostTypeManagerInterface, ArrayAbleInterface
 {
+    /** @var PostTypeBuilderInterface[] */
+    private array $builders = [];
 
-    /**
-     *
-     * @param array<string,PostTypeBuilderInterface>
-     * @return void
-     */
-    public function __construct(
-        private readonly array $postTypes
-    ) {}
-
-    /**
-     *
-     * @param string $name
-     * @return PostTypeBuilderInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPostType(string $name): PostTypeBuilderInterface
+    public function __construct(iterable $postTypes)
     {
-        if (! $this->hasPostType($name)) {
-            throw new InvalidArgumentException("Post Type {$name} tidak tersedia");
+        foreach ($postTypes as $pt) {
+            if ($pt instanceof PostTypeBuilderInterface) {
+                $this->builders[] = $pt;
+            }
         }
-        return $this->postTypes[$name];
     }
 
     /**
-     *
-     * @return array
+     * Jalankan semua register_post_type()
      */
-    public function getAvailablePostTypeNames(): array
+    public function register(): void
     {
-        return array_keys($this->postTypes);
+        foreach ($this->builders as $builder) {
+            register_post_type(
+                $builder->getPostType(),
+                $builder->build()->toArray()
+            );
+        }
     }
 
     /**
-     *
-     * @param string $name
-     * @return bool
+     * Untuk debugging atau dev mode
      */
-    public function hasPostType(string $name): bool
+    public function toArray(): array
     {
-        return isset($this->postTypes[$name]) && $this->postTypes[$name] instanceof PostTypeBuilderInterface;
+        return array_map(fn($pt) => $pt->build()->toArray(), $this->builders);
     }
 }
